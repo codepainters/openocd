@@ -115,7 +115,6 @@ enum target_register_class {
 struct target {
 	struct target_type *type;			/* target type definition (name, access functions) */
 	char *cmd_name;				/* tcl Name of target */
-	int target_number;					/* DO NOT USE!  field to be removed in 2010 */
 	struct jtag_tap *tap;				/* where on the jtag chain is this */
 	int32_t coreid;						/* which device on the TAP? */
 
@@ -149,7 +148,7 @@ struct target {
 	bool working_area_phys_spec;		/* physical address specified? */
 	target_addr_t working_area_phys;			/* physical address */
 	uint32_t working_area_size;			/* size in bytes */
-	uint32_t backup_working_area;		/* whether the content of the working area has to be preserved */
+	bool backup_working_area;			/* whether the content of the working area has to be preserved */
 	struct working_area *working_areas;/* list of allocated working areas */
 	enum target_debug_reason debug_reason;/* reason why the target entered debug state */
 	enum target_endianness endianness;	/* target endianness */
@@ -412,7 +411,6 @@ int target_call_timer_callbacks_now(void);
  */
 int64_t target_timer_next_event(void);
 
-struct target *get_target_by_num(int num);
 struct target *get_current_target(struct command_context *cmd_ctx);
 struct target *get_current_target_or_null(struct command_context *cmd_ctx);
 struct target *get_target(const char *id);
@@ -798,6 +796,8 @@ int target_profiling_default(struct target *target, uint32_t *samples, uint32_t
 #define ERROR_TARGET_NOT_EXAMINED (-311)
 #define ERROR_TARGET_DUPLICATE_BREAKPOINT (-312)
 #define ERROR_TARGET_ALGO_EXIT  (-313)
+#define ERROR_TARGET_SIZE_NOT_SUPPORTED  (-314)
+#define ERROR_TARGET_PACKING_NOT_SUPPORTED  (-315)
 
 extern bool get_target_reset_nag(void);
 
